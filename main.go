@@ -30,7 +30,7 @@ func main() {
 	router.Static("/static", "static")
 
 	router.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "index.html", nil)
+		c.HTML(http.StatusOK, "src/index.html", nil)
 	})
 
 	router.Run(":" + port)
