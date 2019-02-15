@@ -1,37 +1,33 @@
 package main
 
 import (
-	"log"
+	"fmt"
 	"net/http"
 	"os"
-
-	"github.com/gin-gonic/gin"
-	_ "github.com/heroku/x/hmetrics/onload"
 )
 
 func main() {
 	port := os.Getenv("PORT")
 
 	if port == "" {
-		log.Fatal("$PORT must be set")
+		port = "3031"
 	}
 
-	router := gin.New()
+	// router := gin.New()
+
 	// router.Use(gin.Logger())
-	// router.LoadHTMLGlob("src/*.tmpl.html")
+	// router.LoadHTMLGlob("src/index.html")
 	// router.Static("/static", "static")
 
 	// router.GET("/", func(c *gin.Context) {
-	// 	c.HTML(http.StatusOK, "index.tmpl.html", nil)
+	// 	c.HTML(http.StatusOK, "index.html", nil)
 	// })
 
-	router.Use(gin.Logger())
-	router.LoadHTMLGlob("src/index.html")
-	router.Static("/static", "static")
+	// router.Run(":" + port)
 
-	router.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "index.html", nil)
-	})
-
-	router.Run(":" + port)
+	svr := ":" + port
+	fs := http.FileServer(http.Dir("./src"))
+	fmt.Printf("Server run at port : %v", port)
+	http.Handle("/", fs)
+	http.ListenAndServe(svr, nil)
 }
